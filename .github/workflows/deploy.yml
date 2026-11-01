@@ -1,0 +1,66 @@
+name: Deploy Data Vault to Snowflake
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Execute Snowflake Migrations
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Snowflake Connector & CLI
+        run: |
+          pip install snowflake-cli-labs snowflake-connector-python
+
+      - name: Run Snowflake DDL & Tasks
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+        run: |
+          python - << 'PY_EOF'
+          import os
+          import snowflake.connector
+
+          conn = snowflake.connector.connect(
+              user=os.environ["SNOWFLAKE_USER"],
+              password=os.environ["SNOWFLAKE_PASSWORD"],
+              account=os.environ["SNOWFLAKE_ACCOUNT"],
+              role=os.environ.get("SNOWFLAKE_ROLE", "ACCOUNTADMIN")
+          )
+          cursor = conn.cursor()
+
+          # 按依赖层级顺序执行各个分层 SQL
+          sql_files = [
+              "sql/01_setup/01_init_db_and_warehouses.sql",
+              "sql/02_staging_l00/01_stg_and_ingestion.sql",
+              "sql/03_raw_vault_l10/01_rdv_models_and_tasks.sql",
+              "sql/04_business_vault_l20/01_bdv_models_and_tasks.sql",
+              "sql/05_information_delivery_l30/01_star_schema_views.sql"
+          ]
+
+          for file_path in sql_files:
+              print(f"Deploying {file_path}...")
+              with open(file_path, "r", encoding="utf-8") as f:
+                  commands = f.read().split(";")
+                  for cmd in commands:
+                      cmd_clean = cmd.strip()
+                      if cmd_clean:
+                          cursor.execute(cmd_clean)
+
+          cursor.close()
+          conn.close()
+          print("All Data Vault layers successfully deployed!")
+          PY_EOF
