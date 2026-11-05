@@ -33,7 +33,19 @@ jobs:
           cli-version: "latest"
           default-config-file-path: ${{ github.workspace }}/config/config.toml
 
-
+      - name: Check Version and Verify Connection
+        run: |
+            snow --version
+            snow connection test
+            echo "Using branch $GITHUB_REF_NAME"
+            
+            
       - name: Run Snowflake query
         run: |
-          python scripts/run_query.py
+          snow sql -q "
+          use role accountadmin;
+          USE DATABASE BAKERY_DB;
+          USE SCHEMA BAKERY_DB.ORDER
+          USE TABLE BAKERY_DB.ORDER.CUSTOMER_ORDERS;
+          SELECT * FROM CUSTOMER_ORDERS LIMIT 10;"
+        
