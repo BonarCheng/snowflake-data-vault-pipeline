@@ -1,5 +1,7 @@
 USE SCHEMA dv_lab.l20_bdv;
 
+ALTER TASK IF EXISTS dv_lab.l10_rdv.hub_order_strm_sat_order_bv_tsk SUSPEND;
+
 CREATE OR REPLACE VIEW sat_customer_bv AS
 SELECT rsc.sha1_hub_customer  
      , rsc.ldts                   
