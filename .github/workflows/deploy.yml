@@ -2,6 +2,9 @@ name: Deploy to Snowflake
 
 on:
     workflow_dispatch:
+    push:
+      paths:
+        - ".github/workflows/deploy.yml"
 
 env:
     SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
@@ -25,7 +28,11 @@ jobs:
           python-version: '3.11'
 
       - name: Install snowflake CLI
-        uses: snowflakedb/snowflake-cli-action@v1
+        uses: snowflake-Labs/snowflake-cli-action@v1.5
+        with:
+          cli-version: "latest"
+          default-config-file-path: ${{ github.workspace }}/config/config.toml
+
 
       - name: Run Snowflake query
         run: |
