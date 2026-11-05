@@ -6,7 +6,7 @@ on:
     paths:
       - "streamlit_app.py"
       - "snowflake.yml"
-      -".github/workflows/deploy_streamlit.yml"
+      - ".github/workflows/deploy_streamlit.yml"
 
 env:
   SNOWFLAKE_CONNECTIONS_WORKFLOW_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
