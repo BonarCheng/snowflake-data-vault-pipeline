@@ -105,7 +105,7 @@ ALTER PIPE stg_orders_pp   REFRESH;
 
 USE SCHEMA l10_rdv;
 
-CREATE VIEW sat_customer_curr_vw
+CREATE OR REPLACE VIEW sat_customer_curr_vw
 AS
 SELECT  *
 FROM    sat_customer
@@ -119,13 +119,13 @@ QUALIFY LEAD(ldts) OVER (PARTITION BY sha1_hub_order ORDER BY ldts) IS NULL;
 
 USE SCHEMA l20_bdv;
 
-CREATE VIEW sat_order_bv_curr_vw
+CREATE OR REPLACE VIEW sat_order_bv_curr_vw
 AS
 SELECT  *
 FROM    sat_order_bv
 QUALIFY LEAD(ldts) OVER (PARTITION BY sha1_hub_order ORDER BY ldts) IS NULL;
 
-CREATE VIEW sat_customer_bv_curr_vw
+CREATE OR REPLACE VIEW sat_customer_bv_curr_vw
 AS
 SELECT  *
 FROM    sat_customer_bv
