@@ -30,7 +30,7 @@ jobs:
       - name: Deploy App to Snowflake
         run: |
           snow streamlit deploy --replace --database dv_lab --schema l30_id
-          working-directory: app
+        working-directory: app
         
       - name: Get App URL
         run: |
