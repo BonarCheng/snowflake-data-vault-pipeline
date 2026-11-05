@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
     push:
       paths:
-        - ".github/workflows/deploy.yml"
+        - ".github/workflows/01_stage.yml"
 
 env:
   SNOWFLAKE_CONNECTIONS_WORKFLOW_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
@@ -40,9 +40,5 @@ jobs:
             
       - name: Run Snowflake query
         run: |
-          snow sql -q "
-          use role accountadmin;
-          USE DATABASE BAKERY_DB;
-          USE SCHEMA BAKERY_DB.ORDERS;
-          SELECT * FROM CUSTOMER_ORDERS LIMIT 10;"
+          snow sql -f sql/01_setup/01_setup.sql
         
