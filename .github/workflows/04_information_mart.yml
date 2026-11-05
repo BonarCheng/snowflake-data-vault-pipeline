@@ -40,4 +40,4 @@ jobs:
             
       - name: Run Snowflake query
         run: |
-          snow sql -f sql/05_information_mart_l30/01_ID.sql
+          snow sql -f sql/05_information_delivery_l30/01_ID.sql
