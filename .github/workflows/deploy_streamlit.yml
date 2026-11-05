@@ -33,8 +33,8 @@ jobs:
           working-directory: app
         
       - name: Get App URL
-          run: |
-              snow streamlit get-url l30_id_dashboard \
-                --database dv_lab            \
-                --schema l30_id
-          working-directory: app
+        run: |
+            snow streamlit get-url l30_id_dashboard \
+              --database dv_lab            \
+              --schema l30_id
+        working-directory: app
