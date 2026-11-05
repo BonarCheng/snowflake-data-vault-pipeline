@@ -1,6 +1,5 @@
 USE SCHEMA dv_lab.l30_id;
 
--- 客户维度 (Type 1)
 CREATE OR REPLACE VIEW dim1_customer AS 
 SELECT hub.sha1_hub_customer AS dim_customer_key
      , sat.ldts              AS effective_dts
@@ -11,7 +10,6 @@ SELECT hub.sha1_hub_customer AS dim_customer_key
   JOIN dv_lab.l20_bdv.sat_customer_bv_curr_vw sat
     ON hub.sha1_hub_customer = sat.sha1_hub_customer;
 
--- 订单维度 (Type 1)
 CREATE OR REPLACE VIEW dim1_order AS 
 SELECT hub.sha1_hub_order   AS dim_order_key
      , sat.ldts             AS effective_dts
@@ -22,7 +20,6 @@ SELECT hub.sha1_hub_order   AS dim_order_key
   JOIN dv_lab.l20_bdv.sat_order_bv_curr_vw sat
     ON hub.sha1_hub_order = sat.sha1_hub_order;
 
--- 订单事实 (Factless Fact)
 CREATE OR REPLACE VIEW fct_customer_order AS
 SELECT lnk.ldts              AS effective_dts     
      , lnk.rscr              AS record_source
