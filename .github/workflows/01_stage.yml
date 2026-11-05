@@ -1,4 +1,4 @@
-name: Deploy to Snowflake
+name: Deploy setup and stage to Snowflake
 
 on:
     workflow_dispatch:
@@ -41,4 +41,5 @@ jobs:
       - name: Run Snowflake query
         run: |
           snow sql -f sql/01_setup/01_setup.sql
-        
+          snow sql -f sql/02_staging_l00/01_stg.sql
+          
