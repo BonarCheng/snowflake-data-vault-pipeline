@@ -24,10 +24,9 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install snowflake cli
-        uses: snowflake-labs/snowflake-cli-action@v1
-        with:
-          cli-version: 'latest'
+      - name: Install snowflake CLI
+        uses: snowflakedb/snowflake-cli-action@v1
+
       - name: Run Snowflake query
         run: |
           python scripts/run_query.py
