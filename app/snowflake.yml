@@ -1,0 +1,6 @@
+definition_version: 1
+streamlit:
+  name: l30_id_dashboard
+  stage: streamlit_stage
+  query_warehouse: BAKERY_WH
+  main_file: streamlit_app.py
