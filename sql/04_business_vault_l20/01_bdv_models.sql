@@ -84,3 +84,49 @@ QUALIFY LEAD(ldts) OVER (PARTITION BY sha1_hub_order ORDER BY ldts) IS NULL;
 CREATE OR REPLACE VIEW sat_customer_bv_curr_vw AS
 SELECT * FROM sat_customer_bv
 QUALIFY LEAD(ldts) OVER (PARTITION BY sha1_hub_customer ORDER BY ldts) IS NULL;
+
+
+
+
+ALTER TASK l10_rdv.hub_order_strm_sat_order_bv_tsk RESUME;
+ALTER TASK l10_rdv.order_strm_tsk RESUME;
+
+USE SCHEMA l00_stg;
+
+COPY INTO @orders_data 
+FROM
+(SELECT *
+  FROM snowflake_sample_data.tpch_sf10.orders limit 1000
+) 
+INCLUDE_QUERY_ID=TRUE;
+
+ALTER PIPE stg_orders_pp   REFRESH;
+
+
+USE SCHEMA l10_rdv;
+
+CREATE VIEW sat_customer_curr_vw
+AS
+SELECT  *
+FROM    sat_customer
+QUALIFY LEAD(ldts) OVER (PARTITION BY sha1_hub_customer ORDER BY ldts) IS NULL;
+
+CREATE OR REPLACE VIEW sat_order_curr_vw
+AS
+SELECT  *
+FROM    sat_order
+QUALIFY LEAD(ldts) OVER (PARTITION BY sha1_hub_order ORDER BY ldts) IS NULL;
+
+USE SCHEMA l20_bdv;
+
+CREATE VIEW sat_order_bv_curr_vw
+AS
+SELECT  *
+FROM    sat_order_bv
+QUALIFY LEAD(ldts) OVER (PARTITION BY sha1_hub_order ORDER BY ldts) IS NULL;
+
+CREATE VIEW sat_customer_bv_curr_vw
+AS
+SELECT  *
+FROM    sat_customer_bv
+QUALIFY LEAD(ldts) OVER (PARTITION BY sha1_hub_customer ORDER BY ldts) IS NULL;

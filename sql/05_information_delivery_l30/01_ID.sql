@@ -26,3 +26,16 @@ SELECT lnk.ldts              AS effective_dts
      , lnk.sha1_hub_customer AS dim_customer_key
      , lnk.sha1_hub_order    AS dim_order_key
   FROM dv_lab.l10_rdv.lnk_customer_order lnk;
+
+USE SCHEMA l00_stg;
+
+COPY INTO @customer_data 
+FROM
+(SELECT object_construct(*)
+  FROM snowflake_sample_data.tpch_sf10.customer
+  -- removed LIMIT 10
+) 
+INCLUDE_QUERY_ID=TRUE;
+
+ALTER PIPE stg_customer_pp   REFRESH;
+
