@@ -25,4 +25,4 @@ jobs:
 
       - name: Fetch Latest Code into Snowflake
         run: |
-          snow git fetch git_repo_db.github.snowflake_pipeline_repo
+          snow git fetch GITHUB_DATABASE.GITHUB.DATA_VAULT_REPO
