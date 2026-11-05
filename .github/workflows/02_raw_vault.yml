@@ -1,10 +1,10 @@
-name: Deploy setup and stage to Snowflake
+name: Deploy raw vault to Snowflake
 
 on:
     workflow_dispatch:
     push:
       paths:
-        - ".github/workflows/01_stage.yml"
+        - ".github/workflows/02_raw_vault.yml"
 
 env:
   SNOWFLAKE_CONNECTIONS_WORKFLOW_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
